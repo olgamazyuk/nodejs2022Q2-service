@@ -1,7 +1,4 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { AlbumsService } from 'src/albums/albums.service';
-import { ArtistsService } from 'src/artists/artists.service';
-import { TracksService } from 'src/tracks/tracks.service';
+import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class FavoritesService {
