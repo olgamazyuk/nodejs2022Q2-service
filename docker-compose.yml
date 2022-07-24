@@ -1,44 +1,33 @@
-version: '3.7'
+version: '3.0'
+
 services:
-  courses-service:
+  nodejs-service:
     build:
       context: .
       dockerfile: docker/Dockerfile
-      target: ${TARGET:-dev}
-      args:
-        XDEBUG_CONFIG: ${XDEBUG_CONFIG:-}
-        XDEBUG_PLATFORM: ${XDEBUG_PLATFORM:-darwin}
+    restart: always
     ports:
-      - '8080:8080'
+      - ${PORT_SERVICE}:${PORT_SERVICE}
     volumes:
-      - ./:/opt/app
+      - ./:/app
     env_file:
       - .env.docker
+    networks:
+      - user-defined
 
   database:
-    image: mongo:4.2.8
+    image: postgres
+    restart: always
     env_file:
       - .env.docker
     ports:
-      - '27017:27017'
+      - ${PORT_DB}:${PORT_DB}
     volumes:
-      - mongodb_data:/data/db
-
-  redis:
-    image: redis
-    ports:
-      - '6379:6379'
-
-  queue:
-    image: rabbitmq:3.9-management-alpine
-    hostname: rabbitmq
-    ports:
-      - '5672:5672'
-      - '15672:15672'
-    volumes:
-      - rabbitmq_data:/var/lib/rabbitmq/mnesia/
+      - db-data:/var/lib/postgresql/data
 
 volumes:
-  mongodb_data: ~
-  rabbitmq_data: ~
-  content: ~
+  db-data: ~
+
+networks:
+  user-defined:
+    driver: bridge
