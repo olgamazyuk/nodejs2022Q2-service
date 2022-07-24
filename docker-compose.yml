@@ -1,0 +1,44 @@
+version: '3.7'
+services:
+  courses-service:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+      target: ${TARGET:-dev}
+      args:
+        XDEBUG_CONFIG: ${XDEBUG_CONFIG:-}
+        XDEBUG_PLATFORM: ${XDEBUG_PLATFORM:-darwin}
+    ports:
+      - '8080:8080'
+    volumes:
+      - ./:/opt/app
+    env_file:
+      - .env.docker
+
+  database:
+    image: mongo:4.2.8
+    env_file:
+      - .env.docker
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongodb_data:/data/db
+
+  redis:
+    image: redis
+    ports:
+      - '6379:6379'
+
+  queue:
+    image: rabbitmq:3.9-management-alpine
+    hostname: rabbitmq
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq/mnesia/
+
+volumes:
+  mongodb_data: ~
+  rabbitmq_data: ~
+  content: ~
