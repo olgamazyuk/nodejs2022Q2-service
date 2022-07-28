@@ -11,7 +11,7 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -21,13 +21,13 @@ model User {
 }
 
 model Artist {
-  id     Int     @id @default(autoincrement())
+  id     String  @id @default(uuid())
   name   String
   grammy Boolean
 }
 
 model Track {
-  id       Int     @id @default(autoincrement())
+  id       String  @id @default(uuid())
   name     String
   artistId String?
   albumId  String?
@@ -35,14 +35,14 @@ model Track {
 }
 
 model Album {
-  id       Int     @id @default(autoincrement())
+  id       String  @id @default(uuid())
   name     String
   year     Int
   artistId String?
 }
 
 model Favourite {
-  id Int @id @default(autoincrement())
+  id      String   @id @default(uuid())
   artists String[]
   albums  String[]
   tracks  String[]
