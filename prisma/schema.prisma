@@ -9,3 +9,41 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  login    String
+  password String
+  version  Int
+}
+
+model Artist {
+  id     Int     @id @default(autoincrement())
+  name   String
+  grammy Boolean
+}
+
+model Track {
+  id       Int     @id @default(autoincrement())
+  name     String
+  artistId String?
+  albumId  String?
+  duration Int
+}
+
+model Album {
+  id       Int     @id @default(autoincrement())
+  name     String
+  year     Int
+  artistId String?
+}
+
+model Favourite {
+  id Int @id @default(autoincrement())
+  artists String[]
+  albums  String[]
+  tracks  String[]
+}
