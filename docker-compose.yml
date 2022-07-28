@@ -14,8 +14,13 @@ services:
       - .env.docker
     networks:
       - user-defined
+    depends_on:
+      - database
 
   database:
+    build:
+      context: .
+      dockerfile: ./src/database/Dockerfile
     image: postgres
     restart: always
     env_file:
