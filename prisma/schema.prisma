@@ -17,7 +17,7 @@ model User {
 
   login    String
   password String
-  version  Int
+  version  Int    @default(1)
 }
 
 model Artist {
@@ -29,8 +29,8 @@ model Artist {
 model Track {
   id       String  @id @default(uuid())
   name     String
-  artistId String?
-  albumId  String?
+  artistId String? @unique
+  albumId  String? @unique
   duration Int
 }
 
@@ -38,12 +38,9 @@ model Album {
   id       String  @id @default(uuid())
   name     String
   year     Int
-  artistId String?
+  artistId String? @unique
 }
 
 model Favourite {
-  id      String   @id @default(uuid())
-  artists String[]
-  albums  String[]
-  tracks  String[]
+  id String @id @default(uuid())
 }

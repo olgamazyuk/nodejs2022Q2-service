@@ -1,39 +1,39 @@
 import {
   BadRequestException,
-  forwardRef,
-  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Album } from './abum.entity';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { validateId } from 'src/utils';
-import { TracksService } from 'src/tracks/tracks.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class AlbumsService {
-  private static albums: Album[] = [];
+  constructor(private prisma: PrismaService) {}
 
-  constructor(
-    @Inject(forwardRef(() => TracksService))
-    private tracksService: TracksService,
-  ) {}
+  async create(createAlbumDto: CreateAlbumDto) {
 
-  create(createAlbumDto: CreateAlbumDto) {
-    const newAlbum = { id: uuidv4(), ...createAlbumDto };
-    AlbumsService.albums.push(newAlbum);
-
-    return newAlbum;
+    const album = await this.prisma.album.create({
+      data: {
+        id: uuidv4(),
+        ...createAlbumDto,
+      },
+    });
+    return album;
   }
 
-  findAll() {
-    return AlbumsService.albums;
+  async findAll() {
+    return await this.prisma.album.findMany();
   }
 
-  findOne(id: string) {
-    const album = AlbumsService.albums.find((album) => album.id === id);
+  async findOne(id: string) {
+    const album = this.prisma.album.findUnique({
+      where: {
+        id,
+      },
+    });
     if (!validateId(id)) {
       throw new BadRequestException('Invalid id');
     }
@@ -41,7 +41,7 @@ export class AlbumsService {
       throw new NotFoundException('Album not found');
     }
 
-    return album;
+    return await album;
   }
 
   update(id: string, updateAlbumDto: UpdateAlbumDto) {
