@@ -1,12 +1,7 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { v4 as uuidv4 } from 'uuid';
-import { validateId } from 'src/utils';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -14,7 +9,6 @@ export class AlbumsService {
   constructor(private prisma: PrismaService) {}
 
   async create(createAlbumDto: CreateAlbumDto) {
-
     const album = await this.prisma.album.create({
       data: {
         id: uuidv4(),
@@ -29,49 +23,35 @@ export class AlbumsService {
   }
 
   async findOne(id: string) {
-    const album = this.prisma.album.findUnique({
+    const album = await this.prisma.album.findUnique({
       where: {
-        id,
+        id: id,
       },
     });
-    if (!validateId(id)) {
-      throw new BadRequestException('Invalid id');
-    }
     if (!album) {
       throw new NotFoundException('Album not found');
     }
-
-    return await album;
+    return album;
   }
 
-  update(id: string, updateAlbumDto: UpdateAlbumDto) {
-    const index: number = AlbumsService.albums.findIndex(
-      (album) => album.id === id,
-    );
-
-    if (index === -1) {
+  async update(id: string, updateAlbumDto: UpdateAlbumDto) {
+    try {
+      return await this.prisma.album.update({
+        where: { id: id },
+        data: { ...updateAlbumDto },
+      });
+    } catch (err) {
       throw new NotFoundException('Album not found');
     }
-
-    const updatedAlbum = {
-      ...updateAlbumDto,
-      id,
-    };
-
-    AlbumsService.albums[index] = updatedAlbum;
-
-    return updatedAlbum;
   }
 
-  remove(id: string) {
-    const index: number = AlbumsService.albums.findIndex(
-      (album) => album.id === id,
-    );
-
-    if (index === -1) {
+  async remove(id: string) {
+    try {
+      return await this.prisma.album.delete({
+        where: { id: id },
+      });
+    } catch (err) {
       throw new NotFoundException('Album not found');
     }
-
-    AlbumsService.albums.splice(index, 1);
   }
 }

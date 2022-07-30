@@ -8,6 +8,6 @@ export class User {
   password: string;
 
   version: number;
-  creartedAt: number;
+  createdAt: number;
   updatedAt: number;
 }

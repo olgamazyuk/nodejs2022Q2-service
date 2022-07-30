@@ -1,22 +1,19 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class FavoritesService {
-  private static favourites = {
-    artists: [],
-    albums: [],
-    tracks: [],
-  };
+  constructor(private prisma: PrismaService) {}
 
-  findAll() {
-    return FavoritesService.favourites;
+  async findAll() {
+    return this.prisma.favourite.findMany();
   }
 
-  add(id: string) {
+  async add(id: string) {
     return id;
   }
 
-  remove(id: string) {
+  async remove(id: string) {
     return id;
   }
 }

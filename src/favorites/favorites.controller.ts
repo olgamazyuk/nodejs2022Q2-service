@@ -7,15 +7,11 @@ import {
   HttpCode,
   ParseUUIDPipe,
 } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
 import { FavoritesService } from './favorites.service';
 
 @Controller('favs')
 export class FavoritesController {
-  constructor(
-    private readonly favoritesService: FavoritesService,
-    private prisma: PrismaService,
-  ) {}
+  constructor(private readonly favoritesService: FavoritesService) {}
 
   @Get()
   findAll() {

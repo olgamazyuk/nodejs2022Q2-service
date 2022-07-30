@@ -12,14 +12,10 @@ import {
 import { TracksService } from './tracks.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
 
 @Controller('track')
 export class TracksController {
-  constructor(
-    private readonly tracksService: TracksService,
-    private prisma: PrismaService,
-  ) {}
+  constructor(private readonly tracksService: TracksService) {}
 
   @Post()
   @HttpCode(201)
