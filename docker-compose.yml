@@ -11,24 +11,32 @@ services:
     volumes:
       - ./:/app
     env_file:
-      - .env.docker
-    networks:
-      - user-defined
+      - .env
+    environment:
+      POSTGRES_DB: ${POSTGRE_DATABASE}
+      POSTGRES_USER: ${POSTGRE_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRE_PASSWORD}
+      DATABASE_URL: postgresql://${POSTGRE_USERNAME}:${POSTGRE_PASSWORD}@database:5432/${POSTGRE_DATABASE}?schema=public
     depends_on:
       - database
+    networks:
+      - user-defined
 
   database:
-    build:
-      context: .
-      dockerfile: ./src/database/Dockerfile
     image: postgres
     restart: always
     env_file:
-      - .env.docker
+      - .env
+    environment:
+      POSTGRES_DB: ${POSTGRE_DATABASE}
+      POSTGRES_USER: ${POSTGRE_USERNAME}
+      POSTGRES_PASSWORD: ${POSTGRE_PASSWORD}
     ports:
       - ${PORT_DB}:${PORT_DB}
     volumes:
       - db-data:/var/lib/postgresql/data
+    networks:
+      - user-defined
 
 volumes:
   db-data: ~
