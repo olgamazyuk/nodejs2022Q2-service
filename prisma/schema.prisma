@@ -2,7 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl"]
 }
 
@@ -12,7 +12,7 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
+  id        String @id @default(uuid())
   createdAt Int
   updatedAt Int
 
@@ -22,26 +22,41 @@ model User {
 }
 
 model Artist {
-  id     String  @id @default(uuid())
-  name   String
-  grammy Boolean
+  id          String     @id @default(uuid())
+  name        String
+  grammy      Boolean
+  albums      Album[]
+  tracks      Track[]
+  favs        Favourite? @relation(fields: [favouriteId], references: [id], onDelete: SetNull)
+  favouriteId String?
 }
 
 model Track {
-  id       String  @id @default(uuid())
-  name     String
-  artistId String? @unique
-  albumId  String? @unique
-  duration Int
+  id          String     @id @default(uuid())
+  name        String
+  artistId    String?    @unique
+  albumId     String?    @unique
+  duration    Int
+  artist      Artist?    @relation(fields: [artistId], references: [id], onDelete: SetNull)
+  albums      Album?     @relation(fields: [albumId], references: [id], onDelete: SetNull)
+  favs        Favourite? @relation(fields: [favouriteId], references: [id], onDelete: SetNull)
+  favouriteId String?
 }
 
 model Album {
-  id       String  @id @default(uuid())
-  name     String
-  year     Int
-  artistId String? @unique
+  id          String     @id @default(uuid())
+  name        String
+  year        Int
+  artistId    String?    @unique
+  artist      Artist?    @relation(fields: [artistId], references: [id], onDelete: SetNull)
+  tracks      Track[]
+  favs        Favourite? @relation(fields: [favouriteId], references: [id], onDelete: SetNull)
+  favouriteId String?
 }
 
 model Favourite {
-  id String @id @default(uuid())
+  id      String   @id @default(uuid())
+  artists Artist[]
+  albums  Album[]
+  tracks  Track[]
 }
