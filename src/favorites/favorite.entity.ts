@@ -1,6 +1,6 @@
 import { IsArray } from 'class-validator';
 
-export class Favorite {
+export class Favourite {
   @IsArray()
   artists: string[];
 
