@@ -20,7 +20,7 @@ export class AuthService {
   ) {}
 
   async signup(dto: AuthDto) {
-    const salt = this.config.get('CRYPT_SALT');
+    const salt = parseInt(this.config.get('CRYPT_SALT'));
     const hash = await bcrypt.hash(dto.password, salt);
     const time = Date.now();
     try {
