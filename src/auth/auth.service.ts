@@ -9,13 +9,19 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import 'dotenv/config';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService, private jwt: JwtService) {}
+  constructor(
+    private prisma: PrismaService,
+    private jwt: JwtService,
+    private config: ConfigService,
+  ) {}
 
   async signup(dto: AuthDto) {
-    const hash = await bcrypt.hash(dto.password, process.env.CRYPT_SALT);
+    const salt = this.config.get('CRYPT_SALT');
+    const hash = await bcrypt.hash(dto.password, salt);
     const time = Date.now();
     try {
       const isExist = await this.prisma.user.findMany({
@@ -65,7 +71,7 @@ export class AuthService {
   async signToken(
     userId: string,
     login: string,
-  ): Promise<{ access_token: string }> {
+  ): Promise<{ accessToken: string }> {
     const payload = {
       sub: userId,
       login,
@@ -77,7 +83,7 @@ export class AuthService {
     });
 
     return {
-      access_token: token,
+      accessToken: token,
     };
   }
 }
