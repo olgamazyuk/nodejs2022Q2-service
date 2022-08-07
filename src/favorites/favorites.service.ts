@@ -5,7 +5,7 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { validateId } from 'src/utils';
+import { validateId } from 'src/utils/validateId';
 
 @Injectable()
 export class FavoritesService {
