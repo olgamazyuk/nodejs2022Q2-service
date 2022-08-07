@@ -45,3 +45,10 @@ or
 3) Run docker - `docker-compose up`
 
 4) Run tests - `npm run test:auth`
+
+## Logging & Error Handling
+1) Clone repository
+
+2) Go to "logging" branch
+
+3) Run docker - `docker-compose up`
