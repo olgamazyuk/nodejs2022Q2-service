@@ -36,3 +36,12 @@ or
 3) Run docker - `docker-compose up`
 
 4) Open page on http://localhost:4000/doc
+
+## Authentication and Authorization
+1) Clone repository
+
+2) Go to "authentication" branch
+
+3) Run docker - `docker-compose up`
+
+4) Run tests - `npm run test:auth`
